@@ -1922,6 +1922,22 @@ def test_where() -> None:
     assert_identical(expected, actual)
 
 
+def test_where_keep_attrs() -> None:
+    # apply_ufunc copies attrs from the first DataArray argument (cond).
+    cond = xr.DataArray([True, False], dims="x")
+    cond.attrs["attr"] = "da"
+    x = xr.DataArray([1, 2], dims="x")
+
+    actual = xr.where(cond, x, 0, keep_attrs=False)
+    assert not actual.attrs
+
+    actual = xr.where(cond, x, 0, keep_attrs=True)
+    assert actual.attrs == cond.attrs
+
+    actual = xr.where(cond, x, 0)
+    assert not actual.attrs
+
+
 @pytest.mark.parametrize("use_dask", [True, False])
 @pytest.mark.parametrize("use_datetime", [True, False])
 def test_polyval(use_dask, use_datetime) -> None:

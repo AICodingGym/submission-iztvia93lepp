@@ -1727,7 +1727,7 @@ def dot(*arrays, dims=None, **kwargs):
     return result.transpose(*all_dims, missing_dims="ignore")
 
 
-def where(cond, x, y):
+def where(cond, x, y, keep_attrs=None):
     """Return elements from `x` or `y` depending on `cond`.
 
     Performs xarray-like broadcasting across input arguments.
@@ -1743,6 +1743,10 @@ def where(cond, x, y):
         values to choose from where `cond` is True
     y : scalar, array, Variable, DataArray or Dataset
         values to choose from where `cond` is False
+    keep_attrs : bool, optional
+        If True, copy attributes from the first argument to the output.
+        If False, drop attributes. If None (default), look for a value
+        on the ``keep_attrs`` option (which also defaults to False).
 
     Returns
     -------
@@ -1817,6 +1821,7 @@ def where(cond, x, y):
         join="exact",
         dataset_join="exact",
         dask="allowed",
+        keep_attrs=keep_attrs,
     )
 
 
